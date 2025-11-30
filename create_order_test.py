@@ -2,15 +2,20 @@
 import sender_stand_request
 
 
-def test_create_order_and_retrieve_order_info():
-    create_order_response = sender_stand_request.post_new_order()
+# Тест на создание заказа
+def test_create_order_success():
+    response = sender_stand_request.post_new_order()
+    assert response.status_code == 201
+    assert "track" in response.json()
+
+# Тест на получение заказа по треку
+def test_get_order_by_track_success():
+    # Создаем заказ
+    create_response = sender_stand_request.post_new_order()
+    track = create_response.json()["track"]
     
-    assert create_order_response.status_code == 201
-
-    order_track = create_order_response.json().get("track")
-
-    retrieve_order_response = sender_stand_request.get_order(order_track)
-
-    assert retrieve_order_response.status_code == 200
+    # Получаем заказ по треку
+    get_response = sender_stand_request.get_order(track)
+    assert get_response.status_code == 200
     
 
